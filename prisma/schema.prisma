@@ -1,0 +1,39 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Student {
+  id        String    @id @default(cuid())
+  name      String
+  className String
+  createdAt DateTime  @default(now())
+  attempts  Attempt[]
+
+  @@unique([name, className])
+}
+
+model Question {
+  id            String   @id @default(cuid())
+  text          String
+  choices       String // JSON-encoded array of 4 strings
+  correctIndex  Int
+  sourceHint    String // short note on where the fact comes from, shown after answering
+  createdAt     DateTime @default(now())
+}
+
+model Attempt {
+  id           String   @id @default(cuid())
+  studentId    String
+  student      Student  @relation(fields: [studentId], references: [id])
+  correctCount Int
+  totalCount   Int
+  timeMs       Int
+  createdAt    DateTime @default(now())
+
+  @@index([studentId])
+}
