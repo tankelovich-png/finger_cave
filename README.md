@@ -33,23 +33,17 @@ npm run dev                # http://localhost:3000
 
 ### 1. יצירת מסד הנתונים ב-Turso
 
-עם ה-CLI של Turso (`brew install tursodatabase/tap/turso` או [הוראות התקנה](https://docs.turso.tech/cli/installation)):
+הכי פשוט דרך לוח הבקרה באתר turso.tech: "Create Database", ואז בעמוד "Connect" מעתיקים את ה-**Database URL** (`libsql://...`) ולוחצים "Create Token" לקבלת auth token.
 
-```bash
-turso auth login
-turso db create finger-cave
-turso db show finger-cave --url        # שומרים כ-TURSO_DATABASE_URL
-turso db tokens create finger-cave     # שומרים כ-TURSO_AUTH_TOKEN
-```
-
-אין CLI? אפשר גם דרך לוח הבקרה באתר turso.tech - "Create Database", ואז "Connect" כדי לקבל את ה-URL וה-token.
+(יש גם [CLI](https://docs.turso.tech/cli/installation) אם מעדיפים שורת פקודה, אבל לא חובה - השלבים הבאים לא דורשים אותו.)
 
 ### 2. יצירת הטבלאות במסד ה-Turso
 
-בקובץ [`prisma/turso-init.sql`](prisma/turso-init.sql) נמצא סכימת הטבלאות (Student, Question, Attempt). מריצים:
+אין צורך ב-Turso CLI - יש script בפרויקט (`scripts/apply-schema.mjs`) שמריץ את [`prisma/turso-init.sql`](prisma/turso-init.sql) (סכימת הטבלאות: Student, Question, Attempt) ישירות מול Turso באמצעות Node:
 
 ```bash
-turso db shell finger-cave < prisma/turso-init.sql
+npm install
+TURSO_DATABASE_URL="libsql://..." TURSO_AUTH_TOKEN="..." npm run db:push-turso
 ```
 
 ### 3. טעינת 30 השאלות למסד ה-Turso
