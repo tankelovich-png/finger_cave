@@ -1,7 +1,5 @@
-import { PrismaClient } from "@prisma/client";
 import { questions } from "./questions.data";
-
-const prisma = new PrismaClient();
+import { prisma } from "../src/lib/db";
 
 async function main() {
   await prisma.question.deleteMany();

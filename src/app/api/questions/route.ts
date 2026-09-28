@@ -4,6 +4,8 @@ import { shuffle } from "@/lib/shuffle";
 
 const QUIZ_LENGTH = 5;
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   const all = await prisma.question.findMany({ select: { id: true } });
   if (all.length === 0) {

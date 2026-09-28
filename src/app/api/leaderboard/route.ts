@@ -9,6 +9,8 @@ function isBetter(
   return a.timeMs < b.timeMs;
 }
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   const attempts = await prisma.attempt.findMany({
     include: { student: true },

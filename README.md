@@ -29,14 +29,47 @@ npm run dev                # http://localhost:3000
 
 ## פריסה לאינטרנט (כדי שהתלמידים יוכלו להיכנס מבחוץ)
 
-מומלץ **Vercel** (חינמי) + **Turso** (מסד SQLite מנוהל בענן, חינמי לשימוש קטן) - כי SQLite מקומי לא נשמר בין קריאות ב-serverless.
+הקוד כבר תומך ב-**Turso** (SQLite מנוהל בענן) + **Vercel**. השלבים הבאים דורשים את חשבונות ה-Turso/Vercel/GitHub שלכם ולכן לא בוצעו אוטומטית כאן.
 
-1. **Turso**: להירשם ב-[turso.tech](https://turso.tech), ליצור מסד נתונים (`turso db create finger-cave`), ולקבל `DATABASE_URL` ו-`auth token`.
-2. להוסיף לפרויקט את `@libsql/client` + `@prisma/adapter-libsql` (לפי התיעוד העדכני של Prisma ל-Turso/libSQL), ולעדכן את `src/lib/db.ts` בהתאם.
-3. **Vercel**: לחבר את ריפו ה-GitHub הזה בעמוד [vercel.com/new](https://vercel.com/new), ולהגדיר environment variables (`DATABASE_URL`, `TURSO_AUTH_TOKEN` וכו').
-4. להריץ את שלב ה-seed מול מסד ה-Turso (חד פעמי) כדי לטעון את 30 השאלות.
+### 1. יצירת מסד הנתונים ב-Turso
 
-זו הפעולה היחידה בפרויקט שדורשת יצירת חשבונות חיצוניים עם הפרטים האישיים שלכם, ולכן לא בוצעה אוטומטית כאן.
+עם ה-CLI של Turso (`brew install tursodatabase/tap/turso` או [הוראות התקנה](https://docs.turso.tech/cli/installation)):
+
+```bash
+turso auth login
+turso db create finger-cave
+turso db show finger-cave --url        # שומרים כ-TURSO_DATABASE_URL
+turso db tokens create finger-cave     # שומרים כ-TURSO_AUTH_TOKEN
+```
+
+אין CLI? אפשר גם דרך לוח הבקרה באתר turso.tech - "Create Database", ואז "Connect" כדי לקבל את ה-URL וה-token.
+
+### 2. יצירת הטבלאות במסד ה-Turso
+
+בקובץ [`prisma/turso-init.sql`](prisma/turso-init.sql) נמצא סכימת הטבלאות (Student, Question, Attempt). מריצים:
+
+```bash
+turso db shell finger-cave < prisma/turso-init.sql
+```
+
+### 3. טעינת 30 השאלות למסד ה-Turso
+
+מריצים מקומית, עם משתני הסביבה של Turso בלבד (לא DATABASE_URL הרגיל):
+
+```bash
+TURSO_DATABASE_URL="libsql://..." TURSO_AUTH_TOKEN="..." npm run db:seed
+```
+
+### 4. פריסה ב-Vercel
+
+1. נכנסים ל-[vercel.com/new](https://vercel.com/new) ומחברים את ריפו ה-GitHub `finger_cave`.
+2. בהגדרות הפרויקט → Environment Variables, מוסיפים:
+   - `DATABASE_URL` = `file:./dev.db` (נדרש רק כדי ש-Prisma לא יתלונן בזמן build, לא בפועל בשימוש כש-TURSO מוגדר)
+   - `TURSO_DATABASE_URL` = כתובת ה-libsql שקיבלתם
+   - `TURSO_AUTH_TOKEN` = הטוקן שקיבלתם
+3. Deploy. Vercel ייתן כתובת אינטרנט (למשל `finger-cave.vercel.app`) - זו הכתובת שנותנים לתלמידים.
+
+לאחר הפריסה כדאי לבדוק שהאתר עובד end-to-end: הרשמה → למידה → בוחן → תוצאה + לוח מובילים.
 
 ## מבנה הפרויקט
 
