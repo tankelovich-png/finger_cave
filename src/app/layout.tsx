@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Frank_Ruhl_Libre, Heebo } from "next/font/google";
+import AddToFavorites from "@/components/AddToFavorites";
 import "./globals.css";
 
 const display = Frank_Ruhl_Libre({
@@ -23,7 +24,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="he" dir="rtl" className={`${display.variable} ${body.variable}`}>
       <body>
-        <div className="page-frame">{children}</div>
+        <div className="page-frame">
+          <AddToFavorites />
+          {children}
+        </div>
       </body>
     </html>
   );
