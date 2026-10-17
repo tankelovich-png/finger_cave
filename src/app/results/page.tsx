@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { loadStudent, type CurrentStudent } from "@/lib/student-storage";
+import { loadStudent, clearStudent, type CurrentStudent } from "@/lib/student-storage";
 
 type Detail = {
   questionId: string;
@@ -63,7 +63,7 @@ export default function ResultsPage() {
     }
     setResult(JSON.parse(raw));
 
-    fetch("/api/leaderboard")
+    fetch(`/api/leaderboard?role=${encodeURIComponent(s.role ?? "תלמיד")}`)
       .then((res) => res.json())
       .then((data) => {
         setRows(data.rows ?? []);
@@ -74,11 +74,18 @@ export default function ResultsPage() {
 
   if (!student || !result) return null;
 
+  const isParent = student.role === "הורה";
+
   const boysLead = genderTotals && genderTotals["בן"] !== genderTotals["בת"]
     ? genderTotals["בן"] > genderTotals["בת"]
     : null;
 
-  const peerGroup = student.gender === "בן" ? "הבנים" : "הבנות";
+  const peerGroup = student.gender === "בן" ? "הבנים" : student.gender === "בת" ? "הבנות" : "שאר ההורים";
+
+  function startOverAsNewPlayer() {
+    clearStudent();
+    router.push("/");
+  }
 
   return (
     <main>
@@ -109,7 +116,7 @@ export default function ResultsPage() {
 
       <div className="card">
         <span className="eyebrow">שלב 4 • לוח המובילים</span>
-        <h2>הכי טובים בכיתה</h2>
+        <h2>{isParent ? "הכי טובים בין ההורים" : "הכי טובים בכיתה"}</h2>
 
         {genderTotals && boysLead !== null && (
           <div className="gender-banner">
@@ -127,7 +134,7 @@ export default function ResultsPage() {
               <tr>
                 <th>#</th>
                 <th>שם</th>
-                <th>כיתה</th>
+                {!isParent && <th>כיתה</th>}
                 <th>נכונות</th>
                 <th>זמן</th>
               </tr>
@@ -137,9 +144,11 @@ export default function ResultsPage() {
                 <tr key={row.studentId} className={row.studentId === student.id ? "you" : ""}>
                   <td>{i + 1}</td>
                   <td>{row.name}</td>
-                  <td>
-                    {row.grade}׳{row.classNumber}
-                  </td>
+                  {!isParent && (
+                    <td>
+                      {row.grade}׳{row.classNumber}
+                    </td>
+                  )}
                   <td>
                     {row.correctCount}/{row.totalCount}
                   </td>
@@ -155,6 +164,13 @@ export default function ResultsPage() {
         </p>
         <button className="btn" onClick={() => router.push("/quiz")}>
           נסו שוב
+        </button>
+        <button
+          className="btn btn-secondary"
+          style={{ marginTop: 10 }}
+          onClick={startOverAsNewPlayer}
+        >
+          התחל שוב כתלמיד חדש
         </button>
       </div>
     </main>

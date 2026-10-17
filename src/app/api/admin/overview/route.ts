@@ -19,6 +19,7 @@ export async function GET(request: Request) {
       id: s.id,
       name: s.name,
       school: s.school,
+      role: s.role,
       grade: s.grade,
       classNumber: s.classNumber,
       gender: s.gender,

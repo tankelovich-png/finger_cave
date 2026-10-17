@@ -11,9 +11,12 @@ function isBetter(
 
 export const dynamic = "force-dynamic";
 
-export async function GET() {
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const role = searchParams.get("role") === "הורה" ? "הורה" : "תלמיד";
+
   const attempts = await prisma.attempt.findMany({
-    where: { isPractice: false },
+    where: { isPractice: false, student: { role } },
     include: { student: true },
   });
 
@@ -40,11 +43,14 @@ export async function GET() {
       timeMs: attempt.timeMs,
     }));
 
-  const genderTotals = { "בן": 0, "בת": 0 };
-  for (const attempt of bestAttempts) {
-    const gender = attempt.student.gender;
-    if (gender === "בן" || gender === "בת") {
-      genderTotals[gender] += attempt.correctCount;
+  let genderTotals: Record<string, number> | null = null;
+  if (role === "תלמיד") {
+    genderTotals = { "בן": 0, "בת": 0 };
+    for (const attempt of bestAttempts) {
+      const gender = attempt.student.gender;
+      if (gender === "בן" || gender === "בת") {
+        genderTotals[gender] += attempt.correctCount;
+      }
     }
   }
 

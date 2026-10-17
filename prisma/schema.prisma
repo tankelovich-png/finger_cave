@@ -12,13 +12,14 @@ model Student {
   id          String    @id @default(cuid())
   name        String
   school      String
-  grade       String // e.g. "ה"
-  classNumber Int // e.g. 2
-  gender      String // "בן" | "בת"
+  role        String    @default("תלמיד") // "תלמיד" | "הורה"
+  grade       String // e.g. "ה"; "" for parents
+  classNumber Int // e.g. 2; 0 for parents
+  gender      String // "בן" | "בת" for students, "אבא" | "אמא" for parents
   createdAt   DateTime  @default(now())
   attempts    Attempt[]
 
-  @@unique([name, school, grade, classNumber])
+  @@unique([name, school, role, grade, classNumber])
 }
 
 model Question {

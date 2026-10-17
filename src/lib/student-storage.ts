@@ -2,6 +2,7 @@ export type CurrentStudent = {
   id: string;
   name: string;
   school: string;
+  role: string;
   grade: string;
   classNumber: number;
   gender: string;
@@ -23,5 +24,14 @@ export function loadStudent(): CurrentStudent | null {
     return raw ? (JSON.parse(raw) as CurrentStudent) : null;
   } catch {
     return null;
+  }
+}
+
+export function clearStudent() {
+  try {
+    localStorage.removeItem(KEY);
+    sessionStorage.removeItem("fingerCave.lastResult");
+  } catch {
+    // ignore
   }
 }

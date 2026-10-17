@@ -10,6 +10,8 @@ const DEFAULT_SCHOOL = "בית ספר בבלי, תל אביב";
 const DEFAULT_GRADE = "ה";
 const DEFAULT_CLASS_NUMBER = "3";
 
+type Role = "תלמיד" | "הורה";
+
 type LeaderRow = {
   name: string;
   grade: string;
@@ -20,11 +22,12 @@ type LeaderRow = {
 
 export default function RegisterPage() {
   const router = useRouter();
+  const [role, setRole] = useState<Role>("תלמיד");
   const [name, setName] = useState("");
   const [school, setSchool] = useState(DEFAULT_SCHOOL);
   const [grade, setGrade] = useState(DEFAULT_GRADE);
   const [classNumber, setClassNumber] = useState(DEFAULT_CLASS_NUMBER);
-  const [gender, setGender] = useState<"בן" | "בת" | "">("");
+  const [gender, setGender] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [leader, setLeader] = useState<LeaderRow | null>(null);
@@ -41,20 +44,33 @@ export default function RegisterPage() {
 
     const existing = loadStudent();
     if (existing) {
+      const existingRole: Role = existing.role === "הורה" ? "הורה" : "תלמיד";
+      setRole(existingRole);
       setName(existing.name);
       setSchool(existing.school);
-      setGrade(existing.grade);
-      setClassNumber(String(existing.classNumber));
-      setGender(existing.gender === "בן" || existing.gender === "בת" ? existing.gender : "");
+      if (existingRole === "תלמיד") {
+        setGrade(existing.grade || DEFAULT_GRADE);
+        setClassNumber(existing.classNumber ? String(existing.classNumber) : DEFAULT_CLASS_NUMBER);
+      }
+      setGender(existing.gender ?? "");
       setReturningName(existing.name);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  function handleRoleChange(nextRole: Role) {
+    setRole(nextRole);
+    setGender(""); // gender options differ between roles, so reset the choice
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
-    if (!name.trim() || !school.trim() || !grade || !classNumber || !gender) {
+    if (!name.trim() || !school.trim() || !gender) {
+      setError("יש למלא את כל השדות");
+      return;
+    }
+    if (role === "תלמיד" && (!grade || !classNumber)) {
       setError("יש למלא את כל השדות");
       return;
     }
@@ -66,8 +82,9 @@ export default function RegisterPage() {
         body: JSON.stringify({
           name: name.trim(),
           school: school.trim(),
-          grade,
-          classNumber: Number(classNumber),
+          role,
+          grade: role === "תלמיד" ? grade : undefined,
+          classNumber: role === "תלמיד" ? Number(classNumber) : undefined,
           gender,
         }),
       });
@@ -109,6 +126,24 @@ export default function RegisterPage() {
         )}
 
         <form onSubmit={handleSubmit}>
+          <label>מי אתם?</label>
+          <div className="gender-toggle" style={{ marginBottom: 16 }}>
+            <button
+              type="button"
+              className={`choice-btn gender-btn${role === "תלמיד" ? " selected" : ""}`}
+              onClick={() => handleRoleChange("תלמיד")}
+            >
+              תלמיד/ה
+            </button>
+            <button
+              type="button"
+              className={`choice-btn gender-btn${role === "הורה" ? " selected" : ""}`}
+              onClick={() => handleRoleChange("הורה")}
+            >
+              הורה
+            </button>
+          </div>
+
           <label htmlFor="name">שם מלא</label>
           <input
             id="name"
@@ -128,63 +163,93 @@ export default function RegisterPage() {
             placeholder="שם בית הספר"
           />
 
-          <div className="field-row">
-            <div>
-              <label htmlFor="grade">שכבה</label>
-              <select id="grade" value={grade} onChange={(e) => setGrade(e.target.value)}>
-                <option value="" disabled>
-                  בחרו שכבה
-                </option>
-                {GRADES.map((g) => (
-                  <option key={g} value={g}>
-                    {g}׳
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label htmlFor="classNumber">מספר כיתה</label>
-              <select
-                id="classNumber"
-                value={classNumber}
-                onChange={(e) => setClassNumber(e.target.value)}
-              >
-                <option value="" disabled>
-                  בחרו מספר
-                </option>
-                {CLASS_NUMBERS.map((n) => (
-                  <option key={n} value={n}>
-                    {n}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
+          {role === "תלמיד" && (
+            <>
+              <div className="field-row">
+                <div>
+                  <label htmlFor="grade">שכבה</label>
+                  <select id="grade" value={grade} onChange={(e) => setGrade(e.target.value)}>
+                    <option value="" disabled>
+                      בחרו שכבה
+                    </option>
+                    {GRADES.map((g) => (
+                      <option key={g} value={g}>
+                        {g}׳
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label htmlFor="classNumber">מספר כיתה</label>
+                  <select
+                    id="classNumber"
+                    value={classNumber}
+                    onChange={(e) => setClassNumber(e.target.value)}
+                  >
+                    <option value="" disabled>
+                      בחרו מספר
+                    </option>
+                    {CLASS_NUMBERS.map((n) => (
+                      <option key={n} value={n}>
+                        {n}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
 
-          {grade === "ה" && classNumber === "3" && (
-            <p className="class-slogan">ה׳3 בבלי הכי טובים! 🏆</p>
+              {grade === "ה" && classNumber === "3" && (
+                <p className="class-slogan">ה׳3 בבלי הכי טובים! 🏆</p>
+              )}
+
+              <label>מין</label>
+              <p className="muted" style={{ marginTop: -4, marginBottom: 8 }}>
+                יש גם תחרות בנים נגד בנות! ככל שיותר בנים ובנות יענו, כך יגדלו הסיכויים של הקבוצה
+                שלכם לנצח 💪
+              </p>
+              <div className="gender-toggle">
+                <button
+                  type="button"
+                  className={`choice-btn gender-btn${gender === "בן" ? " selected" : ""}`}
+                  onClick={() => setGender("בן")}
+                >
+                  בן
+                </button>
+                <button
+                  type="button"
+                  className={`choice-btn gender-btn${gender === "בת" ? " selected" : ""}`}
+                  onClick={() => setGender("בת")}
+                >
+                  בת
+                </button>
+              </div>
+            </>
           )}
 
-          <label>מין</label>
-          <p className="muted" style={{ marginTop: -4, marginBottom: 8 }}>
-            יש גם תחרות בנים נגד בנות! ככל שיותר בנים ובנות יענו, כך יגדלו הסיכויים של הקבוצה שלכם לנצח 💪
-          </p>
-          <div className="gender-toggle">
-            <button
-              type="button"
-              className={`choice-btn gender-btn${gender === "בן" ? " selected" : ""}`}
-              onClick={() => setGender("בן")}
-            >
-              בן
-            </button>
-            <button
-              type="button"
-              className={`choice-btn gender-btn${gender === "בת" ? " selected" : ""}`}
-              onClick={() => setGender("בת")}
-            >
-              בת
-            </button>
-          </div>
+          {role === "הורה" && (
+            <>
+              <label>אתם...</label>
+              <div className="gender-toggle">
+                <button
+                  type="button"
+                  className={`choice-btn gender-btn${gender === "אבא" ? " selected" : ""}`}
+                  onClick={() => setGender("אבא")}
+                >
+                  אבא
+                </button>
+                <button
+                  type="button"
+                  className={`choice-btn gender-btn${gender === "אמא" ? " selected" : ""}`}
+                  onClick={() => setGender("אמא")}
+                >
+                  אמא
+                </button>
+              </div>
+              <p className="muted" style={{ marginTop: 8 }}>
+                יש לכם לוח מובילים נפרד משלכם - לא תתחרו בילדים/ות 😉
+              </p>
+            </>
+          )}
 
           {error && <p className="error-text">{error}</p>}
           <button type="submit" className="btn" disabled={loading} style={{ marginTop: 16 }}>

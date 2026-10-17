@@ -15,6 +15,7 @@ type Student = {
   id: string;
   name: string;
   school: string;
+  role: string;
   grade: string;
   classNumber: number;
   gender: string;
@@ -171,7 +172,8 @@ export default function AdminPage() {
           ) : (
             <h3 style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <span>
-                {s.name} ({s.gender}) - {s.school}, {s.grade}׳{s.classNumber}
+                {s.name} ({s.role}, {s.gender}) - {s.school}
+                {s.role === "תלמיד" ? `, ${s.grade}׳${s.classNumber}` : ""}
               </span>
               <span style={{ display: "flex", gap: 8 }}>
                 <button
