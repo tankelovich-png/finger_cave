@@ -61,12 +61,22 @@ export default function LearnPage() {
           ))}
         </ul>
 
-        <h3>פודקאסט</h3>
-        <p className="muted">
-          נגן פודקאסט קצר על מערת האצבע והכרמל יתווסף כאן בקרוב. (קובץ אודיו יונח בנתיב{" "}
-          <code>public/podcast.mp3</code>).
-        </p>
-        <audio controls src="/podcast.mp3" />
+        <h3>פודקאסט ווידיאו</h3>
+        <p className="muted">סיכום קולי וויזואלי על מערת האצבע והכרמל - כל המידע שבבוחן נמצא כאן.</p>
+        <div className="media-embed">
+          <iframe
+            src="https://drive.google.com/file/d/1xbNLvuuU09ACR3eHTQr3P2GKAIzOaSbO/preview"
+            allow="autoplay"
+            title="וידיאו: קומפלקס הדירות הפרהיסטורי של הכרמל"
+          />
+        </div>
+        <div className="media-embed media-embed-audio">
+          <iframe
+            src="https://drive.google.com/file/d/1PXpOtoRdBoToQGnMHelLbRJ87DkBof1F/preview"
+            allow="autoplay"
+            title="פודקאסט: כשניאנדרטלים והומו ספיינס חיו בכרמל"
+          />
+        </div>
 
         <button className="btn" onClick={() => router.push("/quiz")} style={{ marginTop: 20 }}>
           התחילו את בוחן הטריוויה
