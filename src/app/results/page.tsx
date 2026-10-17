@@ -90,6 +90,9 @@ export default function ResultsPage() {
           </div>
           <div className="result-time">זמן: {formatTime(result.timeMs)} דקות</div>
         </div>
+        <p className="muted" style={{ textAlign: "center", marginTop: -8, marginBottom: 16 }}>
+          רק הניסיון הטוב ביותר שלך נרשם בלוח המובילים 🏆
+        </p>
 
         <h3>מה למדנו הפעם?</h3>
         <ul className="explanation-list">
