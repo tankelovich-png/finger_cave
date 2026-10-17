@@ -83,9 +83,13 @@ export default function ResultsPage() {
     <main>
       <div className="card">
         <span className="eyebrow">{result.isPractice ? "סיבוב תרגול" : "שלב 3"} • התוצאה שלך</span>
-        {result.isPractice && (
+        {result.isPractice ? (
           <p className="muted" style={{ marginBottom: 8 }}>
             זה היה סיבוב תרגול - התוצאה הזו לא נכנסת ללוח המובילים.
+          </p>
+        ) : (
+          <p className="muted" style={{ marginBottom: 8 }}>
+            אפשר לנסות שוב כמה פעמים שרוצים - רק הניסיון עם התוצאה הכי טובה שלך יוצג ויחושב בלוח המובילים.
           </p>
         )}
         <div className="result-summary">

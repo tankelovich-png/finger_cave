@@ -126,6 +126,11 @@ function QuizPageInner() {
         <div className="progress-bar">
           <div className="progress-fill" style={{ width: `${progressPct}%` }} />
         </div>
+        {index === 0 && !isPractice && (
+          <p className="muted" style={{ marginBottom: 14 }}>
+            אפשר לנסות כמה פעמים שרוצים - רק הניסיון עם התוצאה הכי טובה יוצג ויחושב בלוח המובילים.
+          </p>
+        )}
         <p className="question-text">{current.text}</p>
         {current.choices.map((choice) => (
           <button
