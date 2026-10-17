@@ -166,6 +166,9 @@ export default function RegisterPage() {
           )}
 
           <label>מין</label>
+          <p className="muted" style={{ marginTop: -4, marginBottom: 8 }}>
+            יש גם תחרות בנים נגד בנות! ככל שיותר בנים ובנות יענו, כך יגדלו הסיכויים של הקבוצה שלכם לנצח 💪
+          </p>
           <div className="gender-toggle">
             <button
               type="button"
