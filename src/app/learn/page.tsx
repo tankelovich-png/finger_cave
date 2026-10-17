@@ -66,9 +66,25 @@ export default function LearnPage() {
           />
         </div>
 
-        <a href="/presentation.pptx" download className="resource-list-single">
-          📊 מצגת סיכום - להורדה / צפייה
-          <small>12 שקפים עם כל המידע מהשאלון, בעיצוב בסגנון הכרמל</small>
+        <p className="muted" style={{ marginBottom: 8 }}>
+          📊 מצגת סיכום - 12 שקפים עם כל המידע מהשאלון
+        </p>
+        <div className="media-embed">
+          <iframe
+            src="https://docs.google.com/presentation/d/e/2PACX-1vRzBtCLcP5_RtrFap2Dc5alVBARZzQycj9ZYqbVrLsUnltg5PPPExL2aoydS-j6k2tY2_mbuxuYrQm0/pub?start=false&loop=false&delayms=3000"
+            allow="fullscreen"
+            allowFullScreen
+            title="מצגת: מערת האצבע ונחל המערות"
+          />
+        </div>
+        <a
+          href="https://docs.google.com/presentation/d/e/2PACX-1vRzBtCLcP5_RtrFap2Dc5alVBARZzQycj9ZYqbVrLsUnltg5PPPExL2aoydS-j6k2tY2_mbuxuYrQm0/pub?start=false&loop=false&delayms=3000"
+          target="_blank"
+          rel="noreferrer"
+          className="link-toggle"
+          style={{ marginBottom: 16 }}
+        >
+          לפתיחת המצגת במסך מלא בטאב נפרד ↗
         </a>
 
         <button
