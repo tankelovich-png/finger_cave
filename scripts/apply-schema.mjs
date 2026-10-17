@@ -22,10 +22,20 @@ if (!url) {
 const sqlPath = path.join(__dirname, "..", "prisma", "turso-init.sql");
 const sql = readFileSync(sqlPath, "utf8");
 
+function isCommentOnly(statement) {
+  return statement
+    .split("\n")
+    .map((line) => line.trim())
+    .filter((line) => line.length > 0)
+    .every((line) => line.startsWith("--"));
+}
+
+// A stray ";" inside a comment line (e.g. English prose) would otherwise split
+// off a chunk containing only comments, which Turso rejects as "no statement".
 const statements = sql
   .split(";")
   .map((s) => s.trim())
-  .filter((s) => s.length > 0);
+  .filter((s) => s.length > 0 && !isCommentOnly(s));
 
 const client = createClient({ url, authToken });
 

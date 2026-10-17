@@ -2,7 +2,7 @@
 -- Question is untouched and NOT included here - this file does not touch it.
 --
 -- Running this against an existing Turso DB wipes any Student/Attempt rows already
--- there (fine before real launch; back up first if real student data exists).
+-- there (fine before real launch - back up first if real student data exists).
 --
 -- First time ever running this against a brand-new Turso database? You also need
 -- the Question table, which only exists in git history before this change - ask
