@@ -8,6 +8,7 @@ export async function POST(request: Request) {
   const studentId = typeof body?.studentId === "string" ? body.studentId : "";
   const timeMs = Number.isFinite(body?.timeMs) ? Math.max(0, Math.round(body.timeMs)) : null;
   const answers: SubmittedAnswer[] = Array.isArray(body?.answers) ? body.answers : [];
+  const isPractice = body?.isPractice === true;
 
   if (!studentId || timeMs === null || answers.length === 0) {
     return NextResponse.json({ error: "בקשה לא תקינה" }, { status: 400 });
@@ -55,6 +56,7 @@ export async function POST(request: Request) {
       correctCount,
       totalCount: answers.length,
       timeMs,
+      isPractice,
     },
   });
 
@@ -62,6 +64,7 @@ export async function POST(request: Request) {
     correctCount,
     totalCount: answers.length,
     timeMs,
+    isPractice,
     details,
   });
 }

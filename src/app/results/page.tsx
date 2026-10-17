@@ -17,17 +17,22 @@ type SubmitResult = {
   correctCount: number;
   totalCount: number;
   timeMs: number;
+  isPractice: boolean;
   details: Detail[];
 };
 
 type LeaderboardRow = {
   studentId: string;
   name: string;
-  className: string;
+  school: string;
+  grade: string;
+  classNumber: number;
   correctCount: number;
   totalCount: number;
   timeMs: number;
 };
+
+type GenderTotals = { "בן": number; "בת": number };
 
 function formatTime(ms: number) {
   const totalSec = Math.round(ms / 1000);
@@ -41,6 +46,7 @@ export default function ResultsPage() {
   const [student, setStudent] = useState<CurrentStudent | null>(null);
   const [result, setResult] = useState<SubmitResult | null>(null);
   const [rows, setRows] = useState<LeaderboardRow[]>([]);
+  const [genderTotals, setGenderTotals] = useState<GenderTotals | null>(null);
   const [loadingBoard, setLoadingBoard] = useState(true);
 
   useEffect(() => {
@@ -60,16 +66,28 @@ export default function ResultsPage() {
 
     fetch("/api/leaderboard")
       .then((res) => res.json())
-      .then((data) => setRows(data.rows ?? []))
+      .then((data) => {
+        setRows(data.rows ?? []);
+        setGenderTotals(data.genderTotals ?? null);
+      })
       .finally(() => setLoadingBoard(false));
   }, [router]);
 
   if (!student || !result) return null;
 
+  const boysLead = genderTotals && genderTotals["בן"] !== genderTotals["בת"]
+    ? genderTotals["בן"] > genderTotals["בת"]
+    : null;
+
   return (
     <main>
       <div className="card">
-        <span className="eyebrow">שלב 3 • התוצאה שלך</span>
+        <span className="eyebrow">{result.isPractice ? "סיבוב תרגול" : "שלב 3"} • התוצאה שלך</span>
+        {result.isPractice && (
+          <p className="muted" style={{ marginBottom: 8 }}>
+            זה היה סיבוב תרגול - התוצאה הזו לא נכנסת ללוח המובילים.
+          </p>
+        )}
         <div className="result-summary">
           <div className="result-score">
             {result.correctCount}/{result.totalCount}
@@ -93,6 +111,15 @@ export default function ResultsPage() {
       <div className="card">
         <span className="eyebrow">שלב 4 • לוח המובילים</span>
         <h2>הכי טובים בכיתה</h2>
+
+        {genderTotals && boysLead !== null && (
+          <div className="gender-banner">
+            {boysLead
+              ? `👦 הבנים מובילים כרגע על הבנות! (${genderTotals["בן"]} מול ${genderTotals["בת"]} תשובות נכונות)`
+              : `👧 הבנות מובילות כרגע על הבנים! (${genderTotals["בת"]} מול ${genderTotals["בן"]} תשובות נכונות)`}
+          </div>
+        )}
+
         {loadingBoard ? (
           <p className="muted">טוען לוח מובילים...</p>
         ) : (
@@ -111,7 +138,9 @@ export default function ResultsPage() {
                 <tr key={row.studentId} className={row.studentId === student.id ? "you" : ""}>
                   <td>{i + 1}</td>
                   <td>{row.name}</td>
-                  <td>{row.className}</td>
+                  <td>
+                    {row.grade}׳{row.classNumber}
+                  </td>
                   <td>
                     {row.correctCount}/{row.totalCount}
                   </td>
@@ -122,9 +151,14 @@ export default function ResultsPage() {
           </table>
         )}
 
-        <button className="btn btn-secondary" style={{ marginTop: 20 }} onClick={() => router.push("/quiz")}>
-          רוצים לשפר את הניקוד? נסו שוב!
-        </button>
+        <div className="quiz-cta-row" style={{ marginTop: 20 }}>
+          <button className="btn" onClick={() => router.push("/quiz")}>
+            בוחן רשמי נוסף
+          </button>
+          <button className="btn btn-secondary" onClick={() => router.push("/quiz?practice=1")}>
+            סיבוב תרגול
+          </button>
+        </div>
       </div>
     </main>
   );

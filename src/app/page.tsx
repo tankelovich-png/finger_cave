@@ -4,18 +4,25 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { saveStudent } from "@/lib/student-storage";
 
+const GRADES = ["א", "ב", "ג", "ד", "ה", "ו"];
+const CLASS_NUMBERS = Array.from({ length: 10 }, (_, i) => i + 1);
+const DEFAULT_SCHOOL = "בית ספר בבלי, תל אביב";
+
 export default function RegisterPage() {
   const router = useRouter();
   const [name, setName] = useState("");
-  const [className, setClassName] = useState("");
+  const [school, setSchool] = useState(DEFAULT_SCHOOL);
+  const [grade, setGrade] = useState("");
+  const [classNumber, setClassNumber] = useState("");
+  const [gender, setGender] = useState<"בן" | "בת" | "">("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
-    if (!name.trim() || !className.trim()) {
-      setError("יש למלא שם וכיתה");
+    if (!name.trim() || !school.trim() || !grade || !classNumber || !gender) {
+      setError("יש למלא את כל השדות");
       return;
     }
     setLoading(true);
@@ -23,7 +30,13 @@ export default function RegisterPage() {
       const res = await fetch("/api/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: name.trim(), className: className.trim() }),
+        body: JSON.stringify({
+          name: name.trim(),
+          school: school.trim(),
+          grade,
+          classNumber: Number(classNumber),
+          gender,
+        }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -57,16 +70,69 @@ export default function RegisterPage() {
             placeholder="לדוגמה: נועה כהן"
             autoComplete="name"
           />
-          <label htmlFor="className">כיתה</label>
+
+          <label htmlFor="school">בית ספר</label>
           <input
-            id="className"
+            id="school"
             type="text"
-            value={className}
-            onChange={(e) => setClassName(e.target.value)}
-            placeholder="לדוגמה: ו׳2"
+            value={school}
+            onChange={(e) => setSchool(e.target.value)}
+            placeholder="שם בית הספר"
           />
+
+          <div className="field-row">
+            <div>
+              <label htmlFor="grade">שכבה</label>
+              <select id="grade" value={grade} onChange={(e) => setGrade(e.target.value)}>
+                <option value="" disabled>
+                  בחרו שכבה
+                </option>
+                {GRADES.map((g) => (
+                  <option key={g} value={g}>
+                    {g}׳
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label htmlFor="classNumber">מספר כיתה</label>
+              <select
+                id="classNumber"
+                value={classNumber}
+                onChange={(e) => setClassNumber(e.target.value)}
+              >
+                <option value="" disabled>
+                  בחרו מספר
+                </option>
+                {CLASS_NUMBERS.map((n) => (
+                  <option key={n} value={n}>
+                    {n}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <label>מין</label>
+          <div className="gender-toggle">
+            <button
+              type="button"
+              className={`choice-btn gender-btn${gender === "בן" ? " selected" : ""}`}
+              onClick={() => setGender("בן")}
+            >
+              בן
+            </button>
+            <button
+              type="button"
+              className={`choice-btn gender-btn${gender === "בת" ? " selected" : ""}`}
+              onClick={() => setGender("בת")}
+            >
+              בת
+            </button>
+          </div>
+
           {error && <p className="error-text">{error}</p>}
-          <button type="submit" className="btn" disabled={loading}>
+          <button type="submit" className="btn" disabled={loading} style={{ marginTop: 16 }}>
             {loading ? "נרשמים..." : "בואו נתחיל"}
           </button>
         </form>

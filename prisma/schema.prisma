@@ -9,22 +9,25 @@ datasource db {
 }
 
 model Student {
-  id        String    @id @default(cuid())
-  name      String
-  className String
-  createdAt DateTime  @default(now())
-  attempts  Attempt[]
+  id          String    @id @default(cuid())
+  name        String
+  school      String
+  grade       String // e.g. "ה"
+  classNumber Int // e.g. 2
+  gender      String // "בן" | "בת"
+  createdAt   DateTime  @default(now())
+  attempts    Attempt[]
 
-  @@unique([name, className])
+  @@unique([name, school, grade, classNumber])
 }
 
 model Question {
-  id            String   @id @default(cuid())
-  text          String
-  choices       String // JSON-encoded array of 4 strings
-  correctIndex  Int
-  sourceHint    String // short note on where the fact comes from, shown after answering
-  createdAt     DateTime @default(now())
+  id           String   @id @default(cuid())
+  text         String
+  choices      String // JSON-encoded array of 4 strings
+  correctIndex Int
+  sourceHint   String // short note on where the fact comes from, shown after answering
+  createdAt    DateTime @default(now())
 }
 
 model Attempt {
@@ -34,6 +37,7 @@ model Attempt {
   correctCount Int
   totalCount   Int
   timeMs       Int
+  isPractice   Boolean  @default(false)
   createdAt    DateTime @default(now())
 
   @@index([studentId])

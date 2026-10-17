@@ -114,6 +114,42 @@ input[type="text"]:focus {
   box-shadow: 0 0 0 3px rgba(181, 96, 47, 0.18);
 }
 
+select {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1.5px solid var(--sand-400);
+  background: #fffdf8;
+  font-size: 1rem;
+  font-family: inherit;
+  margin-bottom: 16px;
+  color: var(--ink-900);
+}
+
+select:focus {
+  outline: none;
+  border-color: var(--terracotta-500);
+  box-shadow: 0 0 0 3px rgba(181, 96, 47, 0.18);
+}
+
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.gender-toggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.gender-btn {
+  margin-bottom: 0;
+  text-align: center;
+}
+
 .btn {
   display: inline-flex;
   align-items: center;
@@ -153,6 +189,31 @@ input[type="text"]:focus {
   color: var(--danger);
   font-weight: 600;
   margin-bottom: 12px;
+}
+
+.link-toggle {
+  display: block;
+  width: 100%;
+  text-align: center;
+  padding: 10px;
+  margin-bottom: 14px;
+  border: none;
+  background: none;
+  color: var(--olive-700);
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.link-toggle:hover {
+  text-decoration: underline;
+}
+
+.quiz-cta-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 8px;
 }
 
 .resource-list {
@@ -304,6 +365,17 @@ audio {
   color: var(--olive-700);
   font-weight: 600;
   font-size: 1.1rem;
+}
+
+.gender-banner {
+  text-align: center;
+  padding: 12px 14px;
+  margin-bottom: 16px;
+  border-radius: 10px;
+  background: rgba(201, 143, 58, 0.18);
+  border: 1px solid rgba(201, 143, 58, 0.4);
+  font-weight: 700;
+  color: var(--ink-900);
 }
 
 table.leaderboard {

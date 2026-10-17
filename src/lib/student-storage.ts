@@ -1,4 +1,11 @@
-export type CurrentStudent = { id: string; name: string; className: string };
+export type CurrentStudent = {
+  id: string;
+  name: string;
+  school: string;
+  grade: string;
+  classNumber: number;
+  gender: string;
+};
 
 const KEY = "fingerCave.student";
 

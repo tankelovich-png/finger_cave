@@ -13,6 +13,7 @@ export const dynamic = "force-dynamic";
 
 export async function GET() {
   const attempts = await prisma.attempt.findMany({
+    where: { isPractice: false },
     include: { student: true },
   });
 
@@ -24,16 +25,28 @@ export async function GET() {
     }
   }
 
-  const rows = Array.from(bestByStudent.values())
+  const bestAttempts = Array.from(bestByStudent.values());
+
+  const rows = bestAttempts
     .sort((a, b) => (isBetter(a, b) ? -1 : isBetter(b, a) ? 1 : 0))
     .map((attempt) => ({
       studentId: attempt.studentId,
       name: attempt.student.name,
-      className: attempt.student.className,
+      school: attempt.student.school,
+      grade: attempt.student.grade,
+      classNumber: attempt.student.classNumber,
       correctCount: attempt.correctCount,
       totalCount: attempt.totalCount,
       timeMs: attempt.timeMs,
     }));
 
-  return NextResponse.json({ rows });
+  const genderTotals = { "בן": 0, "בת": 0 };
+  for (const attempt of bestAttempts) {
+    const gender = attempt.student.gender;
+    if (gender === "בן" || gender === "בת") {
+      genderTotals[gender] += attempt.correctCount;
+    }
+  }
+
+  return NextResponse.json({ rows, genderTotals });
 }

@@ -30,6 +30,7 @@ const RESOURCES = [
 export default function LearnPage() {
   const router = useRouter();
   const [student, setStudent] = useState<CurrentStudent | null>(null);
+  const [showLinks, setShowLinks] = useState(false);
 
   useEffect(() => {
     const s = loadStudent();
@@ -47,22 +48,8 @@ export default function LearnPage() {
       <div className="card">
         <span className="eyebrow">שלב 1 • למידה</span>
         <h1>שלום {student.name}!</h1>
-        <p className="subtitle">
-          לפני שניגשים לבוחן, כדאי להעיף מבט במקורות האלה - כל שאלות הטריוויה מבוססות עליהם.
-        </p>
-        <ul className="resource-list">
-          {RESOURCES.map((r) => (
-            <li key={r.href}>
-              <a href={r.href} target="_blank" rel="noreferrer">
-                {r.title}
-                <small>{r.note}</small>
-              </a>
-            </li>
-          ))}
-        </ul>
+        <p className="subtitle">הצפו, האזינו, ואז בחרו איך להתחיל - כל המידע שבבוחן נמצא כאן.</p>
 
-        <h3>פודקאסט ווידיאו</h3>
-        <p className="muted">סיכום קולי וויזואלי על מערת האצבע והכרמל - כל המידע שבבוחן נמצא כאן.</p>
         <div className="media-embed">
           <iframe
             src="https://drive.google.com/file/d/1xbNLvuuU09ACR3eHTQr3P2GKAIzOaSbO/preview"
@@ -78,9 +65,38 @@ export default function LearnPage() {
           />
         </div>
 
-        <button className="btn" onClick={() => router.push("/quiz")} style={{ marginTop: 20 }}>
-          התחילו את בוחן הטריוויה
+        <button
+          type="button"
+          className="link-toggle"
+          onClick={() => setShowLinks((v) => !v)}
+          aria-expanded={showLinks}
+        >
+          {showLinks ? "הסתירו ▲" : "אם תרצו לקרוא עוד ▼"}
         </button>
+        {showLinks && (
+          <ul className="resource-list">
+            {RESOURCES.map((r) => (
+              <li key={r.href}>
+                <a href={r.href} target="_blank" rel="noreferrer">
+                  {r.title}
+                  <small>{r.note}</small>
+                </a>
+              </li>
+            ))}
+          </ul>
+        )}
+
+        <div className="quiz-cta-row">
+          <button className="btn" onClick={() => router.push("/quiz")}>
+            בוחן רשמי
+          </button>
+          <button className="btn btn-secondary" onClick={() => router.push("/quiz?practice=1")}>
+            סיבוב תרגול
+          </button>
+        </div>
+        <p className="muted" style={{ marginTop: 10 }}>
+          בסיבוב תרגול תראו את התוצאה שלכם, אבל היא לא תיכנס ללוח המובילים.
+        </p>
       </div>
     </main>
   );

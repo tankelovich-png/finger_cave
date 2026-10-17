@@ -1,14 +1,24 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { Suspense, useEffect, useRef, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { loadStudent, type CurrentStudent } from "@/lib/student-storage";
 
 type ApiQuestion = { id: string; text: string; choices: string[] };
 type Answer = { questionId: string; selectedText: string };
 
 export default function QuizPage() {
+  return (
+    <Suspense fallback={null}>
+      <QuizPageInner />
+    </Suspense>
+  );
+}
+
+function QuizPageInner() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const isPractice = searchParams.get("practice") === "1";
   const [student, setStudent] = useState<CurrentStudent | null>(null);
   const [questions, setQuestions] = useState<ApiQuestion[]>([]);
   const [index, setIndex] = useState(0);
@@ -79,7 +89,12 @@ export default function QuizPage() {
       const res = await fetch("/api/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ studentId: student.id, timeMs, answers: updatedAnswers }),
+        body: JSON.stringify({
+          studentId: student.id,
+          timeMs,
+          answers: updatedAnswers,
+          isPractice,
+        }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -103,7 +118,7 @@ export default function QuizPage() {
     <main>
       <div className="card">
         <span className="eyebrow">
-          שלב 2 • שאלה {index + 1} מתוך {questions.length}
+          {isPractice ? "סיבוב תרגול" : "שלב 2"} • שאלה {index + 1} מתוך {questions.length}
         </span>
         <span className="timer-badge">
           ⏱ {minutes}:{seconds.toString().padStart(2, "0")}
