@@ -138,6 +138,19 @@ select:focus {
   gap: 12px;
 }
 
+.class-slogan {
+  text-align: center;
+  font-family: var(--font-display), serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--terracotta-600);
+  background: rgba(201, 143, 58, 0.15);
+  border: 1px solid rgba(201, 143, 58, 0.4);
+  border-radius: 10px;
+  padding: 10px;
+  margin-bottom: 16px;
+}
+
 .gender-toggle {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -242,6 +255,29 @@ select:focus {
 }
 
 .resource-list small {
+  display: block;
+  font-weight: 400;
+  opacity: 0.75;
+  margin-top: 4px;
+}
+
+.resource-list-single {
+  display: block;
+  padding: 14px 16px;
+  border-radius: 10px;
+  background: rgba(201, 143, 58, 0.12);
+  border: 1px solid rgba(201, 143, 58, 0.4);
+  color: var(--ink-900);
+  text-decoration: none;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.resource-list-single:hover {
+  background: rgba(201, 143, 58, 0.22);
+}
+
+.resource-list-single small {
   display: block;
   font-weight: 400;
   opacity: 0.75;

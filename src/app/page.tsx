@@ -7,13 +7,15 @@ import { saveStudent } from "@/lib/student-storage";
 const GRADES = ["א", "ב", "ג", "ד", "ה", "ו"];
 const CLASS_NUMBERS = Array.from({ length: 10 }, (_, i) => i + 1);
 const DEFAULT_SCHOOL = "בית ספר בבלי, תל אביב";
+const DEFAULT_GRADE = "ה";
+const DEFAULT_CLASS_NUMBER = "3";
 
 export default function RegisterPage() {
   const router = useRouter();
   const [name, setName] = useState("");
   const [school, setSchool] = useState(DEFAULT_SCHOOL);
-  const [grade, setGrade] = useState("");
-  const [classNumber, setClassNumber] = useState("");
+  const [grade, setGrade] = useState(DEFAULT_GRADE);
+  const [classNumber, setClassNumber] = useState(DEFAULT_CLASS_NUMBER);
   const [gender, setGender] = useState<"בן" | "בת" | "">("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -112,6 +114,10 @@ export default function RegisterPage() {
               </select>
             </div>
           </div>
+
+          {grade === "ה" && classNumber === "3" && (
+            <p className="class-slogan">ה׳3 בבלי הכי טובים! 🏆</p>
+          )}
 
           <label>מין</label>
           <div className="gender-toggle">

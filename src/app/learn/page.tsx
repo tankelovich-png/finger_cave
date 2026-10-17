@@ -53,7 +53,8 @@ export default function LearnPage() {
         <div className="media-embed">
           <iframe
             src="https://drive.google.com/file/d/1xbNLvuuU09ACR3eHTQr3P2GKAIzOaSbO/preview"
-            allow="autoplay"
+            allow="autoplay; fullscreen"
+            allowFullScreen
             title="וידיאו: קומפלקס הדירות הפרהיסטורי של הכרמל"
           />
         </div>
@@ -64,6 +65,11 @@ export default function LearnPage() {
             title="פודקאסט: כשניאנדרטלים והומו ספיינס חיו בכרמל"
           />
         </div>
+
+        <a href="/presentation.pptx" download className="resource-list-single">
+          📊 מצגת סיכום - להורדה / צפייה
+          <small>12 שקפים עם כל המידע מהבוחן, בעיצוב בסגנון הכרמל</small>
+        </a>
 
         <button
           type="button"
