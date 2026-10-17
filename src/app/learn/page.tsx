@@ -71,7 +71,7 @@ export default function LearnPage() {
         </p>
         <div className="media-embed">
           <iframe
-            src="https://docs.google.com/presentation/d/e/2PACX-1vRzBtCLcP5_RtrFap2Dc5alVBARZzQycj9ZYqbVrLsUnltg5PPPExL2aoydS-j6k2tY2_mbuxuYrQm0/pub?start=false&loop=false&delayms=3000"
+            src="https://docs.google.com/presentation/d/e/2PACX-1vRzBtCLcP5_RtrFap2Dc5alVBARZzQycj9ZYqbVrLsUnltg5PPPExL2aoydS-j6k2tY2_mbuxuYrQm0/embed?start=false&loop=false&delayms=3000"
             allow="fullscreen"
             allowFullScreen
             title="מצגת: מערת האצבע ונחל המערות"
