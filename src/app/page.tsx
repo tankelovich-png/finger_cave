@@ -1,58 +1,23 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { saveStudent } from "@/lib/student-storage";
+import { loadStudent } from "@/lib/student-storage";
 
-const GRADES = ["א", "ב", "ג", "ד", "ה", "ו"];
-const CLASS_NUMBERS = Array.from({ length: 10 }, (_, i) => i + 1);
-const DEFAULT_SCHOOL = "בית ספר בבלי, תל אביב";
-const DEFAULT_GRADE = "ה";
-const DEFAULT_CLASS_NUMBER = "3";
+const STEPS = [
+  { title: "הרשמה", desc: "ספרו לנו מי אתם - שם, כיתה, ומי אתם: בן או בת." },
+  { title: "למידה", desc: "צפו בוידיאו, האזינו לפודקאסט, ואם בא לכם - קראו עוד." },
+  { title: "שאלון", desc: "5 שאלות טריוויה כיפיות. אפשר לנסות כמה פעמים שרוצים!" },
+  { title: "תוצאות אישיות, ובנים מול בנות", desc: "ראו איך הלכתם, מי מוביל בלוח, ומי מנצח כרגע - הבנים או הבנות." },
+];
 
-export default function RegisterPage() {
+export default function IntroPage() {
   const router = useRouter();
-  const [name, setName] = useState("");
-  const [school, setSchool] = useState(DEFAULT_SCHOOL);
-  const [grade, setGrade] = useState(DEFAULT_GRADE);
-  const [classNumber, setClassNumber] = useState(DEFAULT_CLASS_NUMBER);
-  const [gender, setGender] = useState<"בן" | "בת" | "">("");
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [continueHref, setContinueHref] = useState<"/register" | "/learn">("/register");
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setError(null);
-    if (!name.trim() || !school.trim() || !grade || !classNumber || !gender) {
-      setError("יש למלא את כל השדות");
-      return;
-    }
-    setLoading(true);
-    try {
-      const res = await fetch("/api/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: name.trim(),
-          school: school.trim(),
-          grade,
-          classNumber: Number(classNumber),
-          gender,
-        }),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        setError(data.error ?? "שגיאה ברישום");
-        return;
-      }
-      saveStudent(data);
-      router.push("/learn");
-    } catch {
-      setError("שגיאת תקשורת, נסו שוב");
-    } finally {
-      setLoading(false);
-    }
-  }
+  useEffect(() => {
+    if (loadStudent()) setContinueHref("/learn");
+  }, []);
 
   return (
     <main>
@@ -60,88 +25,25 @@ export default function RegisterPage() {
         <span className="eyebrow">טיול הכיתה • מערת האצבע</span>
         <h1 className="hero-title">גלו את סודות מערת האצבע והכרמל</h1>
         <p className="subtitle">
-          לפני הטיול, בואו נלמד קצת ונתחרה קצת. הירשמו כדי להתחיל את המסע.
+          זה לא מבחן, זה משחק - קצת למידה, קצת תחרות כיפית, וטיול מגניב בדרך. ככה זה עובד:
         </p>
-        <form onSubmit={handleSubmit}>
-          <label htmlFor="name">שם מלא</label>
-          <input
-            id="name"
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="לדוגמה: נועה כהן"
-            autoComplete="name"
-          />
 
-          <label htmlFor="school">בית ספר</label>
-          <input
-            id="school"
-            type="text"
-            value={school}
-            onChange={(e) => setSchool(e.target.value)}
-            placeholder="שם בית הספר"
-          />
+        <ol className="steps-list">
+          {STEPS.map((s, i) => (
+            <li key={s.title} className="steps-list-item">
+              <span className="steps-list-number">{i + 1}</span>
+              <span>
+                <strong>{s.title}</strong>
+                <br />
+                <span className="muted">{s.desc}</span>
+              </span>
+            </li>
+          ))}
+        </ol>
 
-          <div className="field-row">
-            <div>
-              <label htmlFor="grade">שכבה</label>
-              <select id="grade" value={grade} onChange={(e) => setGrade(e.target.value)}>
-                <option value="" disabled>
-                  בחרו שכבה
-                </option>
-                {GRADES.map((g) => (
-                  <option key={g} value={g}>
-                    {g}׳
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label htmlFor="classNumber">מספר כיתה</label>
-              <select
-                id="classNumber"
-                value={classNumber}
-                onChange={(e) => setClassNumber(e.target.value)}
-              >
-                <option value="" disabled>
-                  בחרו מספר
-                </option>
-                {CLASS_NUMBERS.map((n) => (
-                  <option key={n} value={n}>
-                    {n}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          {grade === "ה" && classNumber === "3" && (
-            <p className="class-slogan">ה׳3 בבלי הכי טובים! 🏆</p>
-          )}
-
-          <label>מין</label>
-          <div className="gender-toggle">
-            <button
-              type="button"
-              className={`choice-btn gender-btn${gender === "בן" ? " selected" : ""}`}
-              onClick={() => setGender("בן")}
-            >
-              בן
-            </button>
-            <button
-              type="button"
-              className={`choice-btn gender-btn${gender === "בת" ? " selected" : ""}`}
-              onClick={() => setGender("בת")}
-            >
-              בת
-            </button>
-          </div>
-
-          {error && <p className="error-text">{error}</p>}
-          <button type="submit" className="btn" disabled={loading} style={{ marginTop: 16 }}>
-            {loading ? "נרשמים..." : "בואו נתחיל"}
-          </button>
-        </form>
+        <button className="btn" onClick={() => router.push(continueHref)} style={{ marginTop: 20 }}>
+          בואו נתחיל! 🎉
+        </button>
       </div>
     </main>
   );

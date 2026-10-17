@@ -33,7 +33,7 @@ function QuizPageInner() {
   useEffect(() => {
     const s = loadStudent();
     if (!s) {
-      router.replace("/");
+      router.replace("/register");
       return;
     }
     setStudent(s);
@@ -118,7 +118,7 @@ function QuizPageInner() {
     <main>
       <div className="card">
         <span className="eyebrow">
-          {isPractice ? "סיבוב תרגול" : "שלב 2"} • שאלה {index + 1} מתוך {questions.length}
+          {isPractice ? "סיבוב תרגול" : "שלב 3"} • שאלה {index + 1} מתוך {questions.length}
         </span>
         <span className="timer-badge">
           ⏱ {minutes}:{seconds.toString().padStart(2, "0")}
@@ -148,7 +148,7 @@ function QuizPageInner() {
           onClick={next}
           disabled={!selected || submitting}
         >
-          {submitting ? "שולח..." : isLast ? "סיימו את הבוחן" : "לשאלה הבאה"}
+          {submitting ? "שולח..." : isLast ? "סיימו את השאלון" : "לשאלה הבאה"}
         </button>
         {error && <p className="error-text">{error}</p>}
       </div>

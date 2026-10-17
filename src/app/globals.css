@@ -229,6 +229,39 @@ select:focus {
   margin-top: 8px;
 }
 
+.steps-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 8px;
+  counter-reset: none;
+}
+
+.steps-list-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(90, 70, 40, 0.15);
+}
+
+.steps-list-item:last-child {
+  border-bottom: none;
+}
+
+.steps-list-number {
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--terracotta-500);
+  color: #fff7ec;
+  font-family: var(--font-display), serif;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .resource-list {
   list-style: none;
   padding: 0;

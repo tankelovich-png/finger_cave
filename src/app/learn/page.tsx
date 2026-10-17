@@ -35,7 +35,7 @@ export default function LearnPage() {
   useEffect(() => {
     const s = loadStudent();
     if (!s) {
-      router.replace("/");
+      router.replace("/register");
       return;
     }
     setStudent(s);
@@ -46,9 +46,9 @@ export default function LearnPage() {
   return (
     <main>
       <div className="card">
-        <span className="eyebrow">שלב 1 • למידה</span>
+        <span className="eyebrow">שלב 2 • למידה</span>
         <h1>שלום {student.name}!</h1>
-        <p className="subtitle">הצפו, האזינו, ואז בחרו איך להתחיל - כל המידע שבבוחן נמצא כאן.</p>
+        <p className="subtitle">הצפו, האזינו, ואז בחרו איך להתחיל - כל המידע שבשאלון נמצא כאן.</p>
 
         <div className="media-embed">
           <iframe
@@ -68,7 +68,7 @@ export default function LearnPage() {
 
         <a href="/presentation.pptx" download className="resource-list-single">
           📊 מצגת סיכום - להורדה / צפייה
-          <small>12 שקפים עם כל המידע מהבוחן, בעיצוב בסגנון הכרמל</small>
+          <small>12 שקפים עם כל המידע מהשאלון, בעיצוב בסגנון הכרמל</small>
         </a>
 
         <button
@@ -94,7 +94,7 @@ export default function LearnPage() {
 
         <div className="quiz-cta-row">
           <button className="btn" onClick={() => router.push("/quiz")}>
-            בוחן רשמי
+            שאלון רשמי
           </button>
           <button className="btn btn-secondary" onClick={() => router.push("/quiz?practice=1")}>
             סיבוב תרגול

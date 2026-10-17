@@ -52,7 +52,7 @@ export default function ResultsPage() {
   useEffect(() => {
     const s = loadStudent();
     if (!s) {
-      router.replace("/");
+      router.replace("/register");
       return;
     }
     setStudent(s);
@@ -82,7 +82,7 @@ export default function ResultsPage() {
   return (
     <main>
       <div className="card">
-        <span className="eyebrow">{result.isPractice ? "סיבוב תרגול" : "שלב 3"} • התוצאה שלך</span>
+        <span className="eyebrow">{result.isPractice ? "סיבוב תרגול" : "שלב 4"} • התוצאה שלך</span>
         {result.isPractice ? (
           <p className="muted" style={{ marginBottom: 8 }}>
             זה היה סיבוב תרגול - התוצאה הזו לא נכנסת ללוח המובילים.
@@ -157,7 +157,7 @@ export default function ResultsPage() {
 
         <div className="quiz-cta-row" style={{ marginTop: 20 }}>
           <button className="btn" onClick={() => router.push("/quiz")}>
-            בוחן רשמי נוסף
+            שאלון רשמי נוסף
           </button>
           <button className="btn btn-secondary" onClick={() => router.push("/quiz?practice=1")}>
             סיבוב תרגול
