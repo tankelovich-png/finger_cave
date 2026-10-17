@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { saveStudent } from "@/lib/student-storage";
+import { loadStudent, saveStudent } from "@/lib/student-storage";
 
 const GRADES = ["א", "ב", "ג", "ד", "ה", "ו"];
 const CLASS_NUMBERS = Array.from({ length: 10 }, (_, i) => i + 1);
@@ -28,6 +28,7 @@ export default function RegisterPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [leader, setLeader] = useState<LeaderRow | null>(null);
+  const [returningName, setReturningName] = useState<string | null>(null);
 
   useEffect(() => {
     fetch("/api/leaderboard")
@@ -37,6 +38,17 @@ export default function RegisterPage() {
         if (top) setLeader(top);
       })
       .catch(() => {});
+
+    const existing = loadStudent();
+    if (existing) {
+      setName(existing.name);
+      setSchool(existing.school);
+      setGrade(existing.grade);
+      setClassNumber(String(existing.classNumber));
+      setGender(existing.gender === "בן" || existing.gender === "בת" ? existing.gender : "");
+      setReturningName(existing.name);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function handleSubmit(e: React.FormEvent) {
@@ -87,6 +99,13 @@ export default function RegisterPage() {
             🏆 כרגע מוביל/ה: {leader.name} ({leader.grade}׳{leader.classNumber}) עם{" "}
             {leader.correctCount}/{leader.totalCount} נכונות!
           </div>
+        )}
+
+        {returningName && (
+          <p className="muted" style={{ marginBottom: 12 }}>
+            נראה שכבר נרשמת בעבר בתור <strong>{returningName}</strong>. אפשר להמשיך איתו/ה, או
+            לשנות את השם ולהירשם בתור מתחרה חדש/ה.
+          </p>
         )}
 
         <form onSubmit={handleSubmit}>

@@ -92,17 +92,9 @@ export default function LearnPage() {
           </ul>
         )}
 
-        <div className="quiz-cta-row">
-          <button className="btn" onClick={() => router.push("/quiz")}>
-            שאלון רשמי
-          </button>
-          <button className="btn btn-secondary" onClick={() => router.push("/quiz?practice=1")}>
-            סיבוב תרגול
-          </button>
-        </div>
-        <p className="muted" style={{ marginTop: 10 }}>
-          בסיבוב תרגול תראו את התוצאה שלכם, אבל היא לא תיכנס ללוח המובילים.
-        </p>
+        <button className="btn" onClick={() => router.push("/quiz")} style={{ marginTop: 8 }}>
+          התחילו את השאלון
+        </button>
       </div>
     </main>
   );

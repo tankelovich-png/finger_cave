@@ -17,7 +17,6 @@ type SubmitResult = {
   correctCount: number;
   totalCount: number;
   timeMs: number;
-  isPractice: boolean;
   details: Detail[];
 };
 
@@ -79,19 +78,12 @@ export default function ResultsPage() {
     ? genderTotals["בן"] > genderTotals["בת"]
     : null;
 
+  const peerGroup = student.gender === "בן" ? "הבנים" : "הבנות";
+
   return (
     <main>
       <div className="card">
-        <span className="eyebrow">{result.isPractice ? "סיבוב תרגול" : "שלב 4"} • התוצאה שלך</span>
-        {result.isPractice ? (
-          <p className="muted" style={{ marginBottom: 8 }}>
-            זה היה סיבוב תרגול - התוצאה הזו לא נכנסת ללוח המובילים.
-          </p>
-        ) : (
-          <p className="muted" style={{ marginBottom: 8 }}>
-            אפשר לנסות שוב כמה פעמים שרוצים - רק הניסיון עם התוצאה הכי טובה שלך יוצג ויחושב בלוח המובילים.
-          </p>
-        )}
+        <span className="eyebrow">שלב 4 • התוצאה שלך</span>
         <div className="result-summary">
           <div className="result-score">
             {result.correctCount}/{result.totalCount}
@@ -155,14 +147,12 @@ export default function ResultsPage() {
           </table>
         )}
 
-        <div className="quiz-cta-row" style={{ marginTop: 20 }}>
-          <button className="btn" onClick={() => router.push("/quiz")}>
-            שאלון רשמי נוסף
-          </button>
-          <button className="btn btn-secondary" onClick={() => router.push("/quiz?practice=1")}>
-            סיבוב תרגול
-          </button>
-        </div>
+        <p className="muted" style={{ marginTop: 20, marginBottom: 10, textAlign: "center" }}>
+          רוצה לנסות שוב ולהשיג תוצאה טובה יותר עבורך ועבור שאר {peerGroup}?
+        </p>
+        <button className="btn" onClick={() => router.push("/quiz")}>
+          נסו שוב
+        </button>
       </div>
     </main>
   );

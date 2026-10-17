@@ -1,24 +1,14 @@
 "use client";
 
-import { Suspense, useEffect, useRef, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { loadStudent, type CurrentStudent } from "@/lib/student-storage";
 
 type ApiQuestion = { id: string; text: string; choices: string[] };
 type Answer = { questionId: string; selectedText: string };
 
 export default function QuizPage() {
-  return (
-    <Suspense fallback={null}>
-      <QuizPageInner />
-    </Suspense>
-  );
-}
-
-function QuizPageInner() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const isPractice = searchParams.get("practice") === "1";
   const [student, setStudent] = useState<CurrentStudent | null>(null);
   const [questions, setQuestions] = useState<ApiQuestion[]>([]);
   const [index, setIndex] = useState(0);
@@ -93,7 +83,6 @@ function QuizPageInner() {
           studentId: student.id,
           timeMs,
           answers: updatedAnswers,
-          isPractice,
         }),
       });
       const data = await res.json();
@@ -118,7 +107,7 @@ function QuizPageInner() {
     <main>
       <div className="card">
         <span className="eyebrow">
-          {isPractice ? "סיבוב תרגול" : "שלב 3"} • שאלה {index + 1} מתוך {questions.length}
+          שלב 3 • שאלה {index + 1} מתוך {questions.length}
         </span>
         <span className="timer-badge">
           ⏱ {minutes}:{seconds.toString().padStart(2, "0")}
@@ -126,7 +115,7 @@ function QuizPageInner() {
         <div className="progress-bar">
           <div className="progress-fill" style={{ width: `${progressPct}%` }} />
         </div>
-        {index === 0 && !isPractice && (
+        {index === 0 && (
           <p className="muted" style={{ marginBottom: 14 }}>
             אפשר לנסות כמה פעמים שרוצים - רק הניסיון עם התוצאה הכי טובה יוצג ויחושב בלוח המובילים.
           </p>

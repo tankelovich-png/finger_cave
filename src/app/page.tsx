@@ -1,8 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { loadStudent } from "@/lib/student-storage";
 
 const STEPS = [
   { title: "הרשמה", desc: "ספרו לנו מי אתם - שם, כיתה, ומי אתם: בן או בת." },
@@ -13,11 +11,6 @@ const STEPS = [
 
 export default function IntroPage() {
   const router = useRouter();
-  const [continueHref, setContinueHref] = useState<"/register" | "/learn">("/register");
-
-  useEffect(() => {
-    if (loadStudent()) setContinueHref("/learn");
-  }, []);
 
   return (
     <main>
@@ -41,7 +34,7 @@ export default function IntroPage() {
           ))}
         </ol>
 
-        <button className="btn" onClick={() => router.push(continueHref)} style={{ marginTop: 20 }}>
+        <button className="btn" onClick={() => router.push("/register")} style={{ marginTop: 20 }}>
           בואו נתחיל! 🎉
         </button>
       </div>
