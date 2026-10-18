@@ -246,7 +246,7 @@ export default function RegisterPage() {
                 </button>
               </div>
               <p className="muted" style={{ marginTop: 8 }}>
-                יש לכם לוח מובילים נפרד משלכם - לא תתחרו בילדים/ות 😉
+                יש לכם לוח מובילים נפרד משלכם - לא תתחרו בילדים/ות 😉 ויש גם תחרות אבות נגד אמהות!
               </p>
             </>
           )}

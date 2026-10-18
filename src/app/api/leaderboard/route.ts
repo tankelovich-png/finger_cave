@@ -43,14 +43,12 @@ export async function GET(request: Request) {
       timeMs: attempt.timeMs,
     }));
 
-  let genderTotals: Record<string, number> | null = null;
-  if (role === "תלמיד") {
-    genderTotals = { "בן": 0, "בת": 0 };
-    for (const attempt of bestAttempts) {
-      const gender = attempt.student.gender;
-      if (gender === "בן" || gender === "בת") {
-        genderTotals[gender] += attempt.correctCount;
-      }
+  const genderPair = role === "תלמיד" ? (["בן", "בת"] as const) : (["אבא", "אמא"] as const);
+  const genderTotals: Record<string, number> = { [genderPair[0]]: 0, [genderPair[1]]: 0 };
+  for (const attempt of bestAttempts) {
+    const gender = attempt.student.gender;
+    if (gender === genderPair[0] || gender === genderPair[1]) {
+      genderTotals[gender] += attempt.correctCount;
     }
   }
 

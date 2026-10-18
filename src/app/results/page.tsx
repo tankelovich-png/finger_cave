@@ -31,7 +31,7 @@ type LeaderboardRow = {
   timeMs: number;
 };
 
-type GenderTotals = { "בן": number; "בת": number };
+type GenderTotals = Record<string, number>;
 
 function formatTime(ms: number) {
   const totalSec = Math.round(ms / 1000);
@@ -76,11 +76,21 @@ export default function ResultsPage() {
 
   const isParent = student.role === "הורה";
 
-  const boysLead = genderTotals && genderTotals["בן"] !== genderTotals["בת"]
-    ? genderTotals["בן"] > genderTotals["בת"]
+  const [teamA, teamB] = isParent ? ["אבא", "אמא"] : ["בן", "בת"];
+  const [teamAEmoji, teamBEmoji] = isParent ? ["👨", "👩"] : ["👦", "👧"];
+  const [teamALabel, teamBLabel] = isParent ? ["האבות", "האמהות"] : ["הבנים", "הבנות"];
+  const teamALead = genderTotals && genderTotals[teamA] !== genderTotals[teamB]
+    ? genderTotals[teamA] > genderTotals[teamB]
     : null;
 
-  const peerGroup = student.gender === "בן" ? "הבנים" : student.gender === "בת" ? "הבנות" : "שאר ההורים";
+  const peerGroup =
+    student.gender === "בן"
+      ? "הבנים"
+      : student.gender === "בת"
+        ? "הבנות"
+        : student.gender === "אבא"
+          ? "האבות"
+          : "האמהות";
 
   function startOverAsNewPlayer() {
     clearStudent();
@@ -118,11 +128,11 @@ export default function ResultsPage() {
         <span className="eyebrow">שלב 4 • לוח המובילים</span>
         <h2>{isParent ? "הכי טובים בין ההורים" : "הכי טובים בכיתה"}</h2>
 
-        {genderTotals && boysLead !== null && (
+        {genderTotals && teamALead !== null && (
           <div className="gender-banner">
-            {boysLead
-              ? `👦 הבנים מובילים כרגע על הבנות! (${genderTotals["בן"]} מול ${genderTotals["בת"]} תשובות נכונות)`
-              : `👧 הבנות מובילות כרגע על הבנים! (${genderTotals["בת"]} מול ${genderTotals["בן"]} תשובות נכונות)`}
+            {teamALead
+              ? `${teamAEmoji} ${teamALabel} מובילים כרגע על ${teamBLabel}! (${genderTotals[teamA]} מול ${genderTotals[teamB]} תשובות נכונות)`
+              : `${teamBEmoji} ${teamBLabel} מובילות כרגע על ${teamALabel}! (${genderTotals[teamB]} מול ${genderTotals[teamA]} תשובות נכונות)`}
           </div>
         )}
 
