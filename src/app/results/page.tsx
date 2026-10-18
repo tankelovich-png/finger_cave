@@ -97,6 +97,9 @@ export default function ResultsPage() {
     router.push("/");
   }
 
+  const myRank = rows.findIndex((row) => row.studentId === student.id) + 1; // 0 if not found
+  const inTopTen = myRank >= 1 && myRank <= 10;
+
   return (
     <main>
       <div className="card">
@@ -110,6 +113,11 @@ export default function ResultsPage() {
         <p className="muted" style={{ textAlign: "center", marginTop: -8, marginBottom: 16 }}>
           רק הניסיון הטוב ביותר שלך נרשם בלוח המובילים 🏆
         </p>
+        {inTopTen && (
+          <p className="gender-banner" style={{ textAlign: "center" }}>
+            כל הכבוד! אתה במקום {myRank}! 🎉
+          </p>
+        )}
 
         <h3>מה למדנו הפעם?</h3>
         <ul className="explanation-list">
