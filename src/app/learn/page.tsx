@@ -48,7 +48,7 @@ export default function LearnPage() {
       <div className="card">
         <span className="eyebrow">שלב 2 • למידה</span>
         <h1>שלום {student.name}!</h1>
-        <p className="subtitle">הצפו, האזינו, ואז בחרו איך להתחיל - כל המידע שבשאלון נמצא כאן.</p>
+        <p className="subtitle">צפו, האזינו, ואז בחרו איך להתחיל - כל המידע שבשאלון נמצא כאן.</p>
 
         <div className="media-embed">
           <iframe
