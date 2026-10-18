@@ -9,6 +9,9 @@ const STEPS = [
   { title: "תוצאות אישיות, ובנים מול בנות", desc: "ראו איפה אתם מדורגים ביחס לכיתה, ומי מנצח כרגע - הבנים או הבנות." },
 ];
 
+const PARENTS_NOTE =
+  "גם הורים מוזמנים לשחק! יש לכם לוח מובילים נפרד משלכם (לא מתחרה בתלמידים), וגם תחרות משלכם - אמהות מול אבות.";
+
 export default function IntroPage() {
   const router = useRouter();
 
@@ -33,6 +36,10 @@ export default function IntroPage() {
             </li>
           ))}
         </ol>
+
+        <p className="muted" style={{ marginTop: 16 }}>
+          👨‍👩‍👧 {PARENTS_NOTE}
+        </p>
 
         <button className="btn" onClick={() => router.push("/register")} style={{ marginTop: 20 }}>
           בואו נתחיל! 🎉
